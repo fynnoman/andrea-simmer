@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: "Inter", "SF Pro Text", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Fraunces", "New York", "Playfair Display", ui-serif, Georgia, serif;
+  --paper: #F6F0E3;
+  --paper-hi: #FBF7EF;
+  --ink: #141821;
+  --teal: #177E7E;
+  --teal-soft: #EAF7F7;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+  body {
+    overflow-x: hidden;
+    background:
+      radial-gradient(1200px 700px at 15% -10%, rgba(32,155,155,0.09), transparent 60%),
+      radial-gradient(900px 700px at 90% 5%, rgba(201,164,107,0.10), transparent 60%),
+      linear-gradient(180deg, #FBF7EF 0%, #F6F0E3 40%, #F1E9D6 100%);
+    /* background-attachment: fixed removed — massive repaint cost on scroll */
+  }
+  ::selection {
+    background: rgba(23,126,126,0.20);
+    color: var(--ink);
+  }
+
+  h1, h2, h3 { letter-spacing: -0.02em; }
+}
+
+@layer components {
+  .paper-card {
+    background: linear-gradient(180deg, #FDFAF4 0%, #F7F1E4 100%);
+    border: 1px solid rgba(20,25,35,0.06);
+    box-shadow:
+      0 1px 3px rgba(20,25,35,0.04),
+      0 20px 50px -25px rgba(20,25,35,0.15);
+  }
+  .paper-card-lift {
+    background: linear-gradient(180deg, #FFFDF7 0%, #F8F2E5 100%);
+    border: 1px solid rgba(20,25,35,0.06);
+    box-shadow:
+      0 1px 3px rgba(20,25,35,0.04),
+      0 30px 80px -30px rgba(20,25,35,0.28);
+  }
+  /* No backdrop-filter on mid-page glass — reserve for nav */
+  .glass-light {
+    background: linear-gradient(180deg, rgba(255,253,247,0.9) 0%, rgba(246,240,227,0.85) 100%);
+    border: 1px solid rgba(20,25,35,0.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.9),
+      0 8px 40px -14px rgba(20,25,35,0.18);
+  }
+  .glass-pill {
+    background: linear-gradient(180deg, rgba(255,253,247,0.85) 0%, rgba(248,242,229,0.78) 100%);
+    border: 1px solid rgba(20,25,35,0.08);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    box-shadow:
+      0 10px 30px -18px rgba(20,25,35,0.30),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+  }
+  .text-gradient-teal {
+    background: linear-gradient(120deg, #116060 0%, #177E7E 50%, #209B9B 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-ink {
+    background: linear-gradient(180deg, #141821 0%, #333A45 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+  .display-italic {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-optical-sizing: auto;
+  }
+  .rule-teal {
+    background: linear-gradient(90deg, transparent, rgba(23,126,126,0.5), transparent);
+    height: 1px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(20,25,35,0.10);
+    background: rgba(255,253,247,0.8);
+    font-size: .72rem;
+    font-weight: 500;
+    color: #2A2F36;
+  }
+}
+
+/* Marquee driven purely by CSS (cheaper than JS raf loop) */
+@keyframes marquee-loop {
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+.marquee-track {
+  animation: marquee-loop var(--marquee-duration, 45s) linear infinite;
+  will-change: transform;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(20,25,35,0.15);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(23,126,126,0.5); }
+
+/* Perf: honour reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
